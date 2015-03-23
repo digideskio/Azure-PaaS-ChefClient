@@ -93,7 +93,7 @@ There are two configuration paths to take, from config.json or directly in your 
 <Role name="AzureRoleName">
 <Instances count="1" />
 <ConfigurationSettings>
-  <Setting name="ChefClient_ServerUrl" value="https://chefsvr-ha.cloudapp.net/organizations/msn" />
+  <Setting name="ChefClient_ServerUrl" value="https://chefsvr-url/organizations/org_name" />
   <Setting name="ChefClient_EncryptedDataBagSecret" value="" />
   <Setting name="ChefClient_ServerUrl" value="" />
   <Setting name="ChefClient_Role" value="" />
@@ -103,7 +103,21 @@ There are two configuration paths to take, from config.json or directly in your 
   <Setting name="ChefClient_ServiceName" value="" />
 </ConfigurationSettings>
 </Role>
-TBA
+```
+
+####ServiceDefinition.csdef
+The Service Definition requires two additional settings, one to indicate the start up task:
+
+```xml
+<Startup>
+    <Task commandLine="Deployment\Start.cmd" executionContext="elevated" taskType="simple" />
+</Startup>
+```
+
+Additionally, the role must run with elevated privileges to be able start/stop the chef client service when neccessary. This is done by updating your csdef file with the additional child element for your role:
+
+```xml
+<Runtime executionContext="elevated"></Runtime>
 ```
 
 ##Data available to your recipes
@@ -122,7 +136,7 @@ function
 service_name
 ~~~
 
-The last five, come directly from your configured service deployment allowing to pass from azure role to Chef Node.
+The last five come directly from your configured service deployment, allowing data to pass from the azure role to Chef Node.
 
 
 ###Extending
