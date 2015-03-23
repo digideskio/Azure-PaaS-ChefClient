@@ -51,15 +51,58 @@ Configured for local package sources (where your newly packages reside), click '
 
 Your web role will now contain the two code (.cs) files and a deployment folder with the configuration, script, and two PowerShell Modules.
 
+####OnStart
+In your RolEntryPoint.OnStart() method you need to start the chef-client windows service.
+
+```csharp
+ClientService.Start()
+
+or 
+
+ClientService.Start(TimeSpan)
+```
+
+####OnStop
+In your RolEntryPoint.OnStop() method you need to stop the chef-client windows service.
+
+```csharp
+ClientService.Stop()
+
+or 
+
+ClientService.Stop(TimeSpan, boolean)
+```
+
 ###Configuration
 There are two configuration paths to take, from config.json or directly in your cloud service configuration (.cscfg) file. They are limited based on the current functionlity of the (script) main.ps1, but can be extended (read further below in *Extending*).
 ####config.json
-~~~json
-TBA
-~~~
+```json
+{
+  "name": "node_name_prefix",
+  "role": "role_name",
+  "pollInterval": "120",
+  "serverUrl": "https://chefsvr-url/organizations/org_name",
+  "sslVerifyMode": ":verify_none",
+  "validationClientName": "validator-name",
+  "validationKey": "validator-name.pem"
+}
+```
 
 ####cloudService.cscfg
 ```xml
+<Role name="AzureRoleName">
+<Instances count="1" />
+<ConfigurationSettings>
+  <Setting name="ChefClient_ServerUrl" value="https://chefsvr-ha.cloudapp.net/organizations/msn" />
+  <Setting name="ChefClient_EncryptedDataBagSecret" value="" />
+  <Setting name="ChefClient_ServerUrl" value="" />
+  <Setting name="ChefClient_Role" value="" />
+  <Setting name="ChefClient_Environment" value="" />
+  <Setting name="ChefClient_Region" value="" />
+  <Setting name="ChefClient_Function" value="" />
+  <Setting name="ChefClient_ServiceName" value="" />
+</ConfigurationSettings>
+</Role>
 TBA
 ```
 
